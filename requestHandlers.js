@@ -18,10 +18,21 @@ response.end();
 }
 
 function upload(response) {
-console.log("Request handler 'upload' was called.");
-response.writeHead(200, {"Content-Type": "text/plain"});
-response.write("Hello Upload");
+exec("java -jar /home/lukas/Desktop/TextToFace/Analysis2.jar",
+{ timeout: 10000, maxBuffer: 20000*1024 },
+function (error, stdout, stderr) {
+response.writeHead(200, {"Content-Type": "text/html"});
+response.write("<DOCTYPE HTML>");
+response.write("<html><body>");
+var json = '{"result":true,"count":1}',
+    obj = JSON.parse(json);
+
+var obj = JSON.parse(stdout);
+
+response.write(obj.first);
+response.write("</body></html>");
 response.end();
+});
 }
 
 function show(response, query) {
@@ -41,10 +52,10 @@ function show(response, query) {
          var readStream = fs.createReadStream("./"+Path);
 
         // This will wait until we know the readable stream is actually valid before piping
-        readdStream.on('open', function () {
+        readStream.on('open', function () {
         //This just pipes the read stream to the response object (which goes to the client)
         response.writeHead(200, {"Content-Type": "image/png"});
-        readStream.pipe(res);
+        readStream.pipe(response);
       });
 
       // This catches any errors that happens while creating the readable stream (usually invalid names)
