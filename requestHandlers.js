@@ -24,12 +24,11 @@ function (error, stdout, stderr) {
 response.writeHead(200, {"Content-Type": "text/html"});
 response.write("<DOCTYPE HTML>");
 response.write("<html><body>");
-var json = '{"result":true,"count":1}',
+response.write(stdout);
+var json = stdout;
     obj = JSON.parse(json);
 
-var obj = JSON.parse(stdout);
-
-response.write(obj.first);
+response.write(obj.first.toString());
 response.write("</body></html>");
 response.end();
 });
